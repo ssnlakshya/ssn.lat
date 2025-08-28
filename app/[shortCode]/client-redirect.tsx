@@ -1,6 +1,8 @@
-'use client'
+"use client"
 
-import { useEffect } from 'react'
+import { useEffect } from "react"
+import { motion } from "framer-motion"
+import { WaitlistWrapper } from "@/components/box"
 
 interface ClientRedirectProps {
   url: string
@@ -8,27 +10,33 @@ interface ClientRedirectProps {
 
 export default function ClientRedirect({ url }: ClientRedirectProps) {
   useEffect(() => {
-    // Immediate redirect
     window.location.href = url
   }, [url])
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-      <div className="bg-white rounded-2xl p-8 shadow-lg text-center max-w-md">
-        <div className="mb-4">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto"></div>
+    <WaitlistWrapper>
+      <motion.div
+        className="space-y-6 text-center"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <h1 className="text-2xl sm:text-3xl font-semibold text-slate-12 text-balance">
+          Redirecting...
+        </h1>
+        <div className="flex flex-col items-center gap-6">
+          <p className="text-slate-10 text-pretty leading-relaxed">
+            Taking you to your destination
+          </p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+          <a
+            href={url}
+            className="text-orange-500 hover:text-orange-600 underline text-sm"
+          >
+            Click here if not redirected automatically
+          </a>
         </div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-2">Redirecting...</h2>
-        <p className="text-gray-600 text-sm mb-4">
-          Taking you to your destination
-        </p>
-        <a 
-          href={url}
-          className="text-orange-500 hover:text-orange-600 underline text-sm"
-        >
-          Click here if not redirected automatically
-        </a>
-      </div>
-    </div>
+      </motion.div>
+    </WaitlistWrapper>
   )
 }
