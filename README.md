@@ -1,49 +1,193 @@
-![Open Graph, Waitlist](https://github.com/basehub-ai/waitlist-template/blob/main/public/waitlist-template.png?raw=true)
+# ssn.lat
 
-[BaseHub Templates](https://basehub.com/templates) are production-ready website templates, powered by BaseHub.
+![ssn.lat Screenshot](ss.png)
 
-# Waitlist Template
+A modern, fast URL shortener built specifically for SSN College of Engineering students and the Lakshya E-Cell community. Transform your long URLs into clean, shareable links with custom aliases and real-time analytics.
 
-[![Use template](https://basehub.com/template-button.svg)](https://basehub.com/basehub/waitlist-template)
+## ✨ Features
 
-Fully featured Waitlist Template.
+- **🔗 URL Shortening**: Convert long URLs into short, memorable links
+- **🎨 Custom Aliases**: Create personalized short codes for your links
+- **📊 Click Tracking**: Monitor how many times your links are accessed
+- **🌗 Dark/Light Mode**: Seamless theme switching
+- **📱 Responsive Design**: Works perfectly on all devices
+- **⚡ Real-time**: Instant URL shortening with live feedback
+- **🎭 Smooth Animations**: Beautiful Framer Motion transitions
+- **🎨 Modern UI**: Clean interface with Bricolage Grotesque font
 
-- 🔸 Ideal for startups and indie hackers seeking to build a waitlist for early adopters
-- 🔸 Allows for sending personalized emails to subscribers, encouraging interaction and excitement, all in BaseHub.
-- 🔸 Fully customizable to match your brand's voice and style
-- 🔸 Seamlessly integrates with BaseHub, ensuring a smooth process for managing your waitlist and sending newsletters
+## 🛠️ Tech Stack
 
-## Stack
+- **Framework**: [Next.js 15](https://nextjs.org/) with App Router
+- **Database**: [Supabase](https://supabase.com/) PostgreSQL
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) with custom color system
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **Background**: [Paper Design Shaders](https://github.com/paper-design/shaders-react) for animated mesh gradient
+- **Typography**: [Bricolage Grotesque](https://fonts.google.com/specimen/Bricolage+Grotesque)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Deployment**: Vercel-ready
 
-- Next.js
-- BaseHub
-- Tailwind CSS
+## 🚀 Getting Started
 
-## One Click Deployment
+### Prerequisites
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fbasehub-ai%2Fwaitlist-template&integration-ids=oac_xwgyJe0UwFLtsKIvIScYh0rY&project-name=waitlist-template&repository-name=waitlist-template&redirect-url=https%3A%2F%2Fbasehub.com%2Fapi%2Fvercel%2Fredirect-repo&env=RESEND_TOKEN&external-id=mly6i259eym3jkyvq6txyciu%3AQpFqhzC2n0yFl4DNHmCJL%3Aread%3A%3Cbasehub-null-value%3E%3A%3Cbasehub-null-value%3E%3A%3Cbasehub-null-value%3E&teamSlug=basehub&envDescription=Get%20your%20env%20token%20in%20https%3A%2F%2Fresend.com&envLink=https%3A%2F%2Fresend.com)
+- Node.js 18+ 
+- npm or yarn
+- Supabase account
 
-_You can deploy this anywhere. Vercel works nicely and with one click._
+### Installation
 
-## Local Development
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/ssn.lat.git
+   cd ssn.lat
+   ```
 
-**Install dependencies**
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-\`\`\`bash
-pnpm i
-\`\`\`
+3. **Set up Supabase**
+   - Create a new project at [supabase.com](https://supabase.com)
+   - Go to SQL Editor and run this schema:
+   
+   ```sql
+   CREATE TABLE urls (
+     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+     long_url TEXT NOT NULL,
+     short_code TEXT NOT NULL UNIQUE,
+     custom_alias TEXT,
+     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+     click_count INTEGER DEFAULT 0
+   );
 
-**Add your BASEHUB_TOKEN to `.env.local`**
+   CREATE INDEX idx_urls_short_code ON urls(short_code);
+   ```
 
-\`\`\`txt
-# .env.local
+4. **Environment Setup**
+   - Copy `.env.example` to `.env.local`
+   - Fill in your Supabase credentials:
+   
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   NEXT_PUBLIC_SITE_URL=https://ssn.lat
+   ```
 
-BASEHUB_TOKEN="<get-it-from-your-basehub-repo>"
-RESEND_API_KEY="" # get it here https://resend.com/
-\`\`\`
+5. **Run the development server**
+   ```bash
+   npm run dev
+   ```
 
-**Start the dev server**
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-\`\`\`bash
-pnpm dev
-\`\`\`
+## 🏗️ How It Works
+
+### URL Shortening Process
+
+1. **Input Validation**: User submits a long URL with optional custom alias
+2. **Code Generation**: System generates a unique 6-character short code using Base62 encoding
+3. **Database Storage**: URL mapping is stored in Supabase with metadata
+4. **Response**: Returns shortened URL in format `https://ssn.lat/shortcode`
+
+### Redirection Process
+
+1. **Route Matching**: Next.js dynamic route `[shortCode]` captures the short code
+2. **Database Lookup**: Query Supabase for the corresponding long URL
+3. **Analytics Update**: Increment click counter for tracking
+4. **Redirect**: Server-side redirect (with client-side fallback) to the original URL
+
+### Code Structure
+
+```
+ssn.lat/
+├── app/                    # Next.js App Router
+│   ├── [shortCode]/       # Dynamic route for redirects
+│   ├── api/shorten/       # URL shortening API endpoint
+│   ├── layout.tsx         # Root layout with theme provider
+│   └── page.tsx           # Main URL shortener interface
+├── components/            # React components
+│   ├── box/              # Main container wrapper
+│   ├── header/           # Navigation header
+│   ├── mesh-gradient.tsx # Animated background
+│   └── ui/               # UI components
+├── lib/
+│   └── supabase.ts       # Supabase client configuration
+└── public/               # Static assets
+    ├── ssnlogo.webp      # SSN logo
+    └── lakshya.png       # Lakshya E-Cell logo
+```
+
+## 🎨 Design Features
+
+- **Animated Background**: Dynamic mesh gradient with orange/white color scheme
+- **Logo Integration**: SSN College and Lakshya E-Cell branding
+- **Theme Awareness**: SSN logo inverts to black in light mode
+- **Micro-interactions**: Hover effects, loading states, and smooth transitions
+- **Responsive**: Mobile-first design approach
+
+## 📊 Database Schema
+
+```sql
+Table: urls
+├── id (UUID, Primary Key)
+├── long_url (TEXT, NOT NULL)
+├── short_code (TEXT, UNIQUE, NOT NULL)
+├── custom_alias (TEXT, NULLABLE)
+├── created_at (TIMESTAMP WITH TIME ZONE, DEFAULT NOW())
+└── click_count (INTEGER, DEFAULT 0)
+```
+
+## 🔧 API Reference
+
+### POST /api/shorten
+Create a new short URL.
+
+**Request Body:**
+```json
+{
+  "longUrl": "https://example.com/very/long/url",
+  "customAlias": "mylink" // optional
+}
+```
+
+**Response:**
+```json
+{
+  "shortUrl": "https://ssn.lat/mylink",
+  "shortCode": "mylink"
+}
+```
+
+**Error Responses:**
+- `400`: Invalid URL or custom alias already exists
+- `500`: Internal server error
+
+## 🚀 Deployment
+
+### Vercel (Recommended)
+
+1. Connect your GitHub repository to Vercel
+2. Add environment variables in Vercel dashboard
+3. Deploy automatically on push to main branch
+
+### Manual Deployment
+
+1. Build the project: `npm run build`
+2. Start the production server: `npm start`
+
+## 🤝 Contributing
+
+We welcome contributions from the SSN community! Please read our contributing guidelines and feel free to submit pull requests.
+
+## 📝 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## 🏫 About
+
+Built with ❤️ for **SSN College of Engineering** students by the **Lakshya E-Cell** community. This URL shortener serves our college community with a fast, reliable way to share links across campus activities, events, and projects.
+
+---
+
+**Made by the SSN Community | Powered by Lakshya E-Cell**
