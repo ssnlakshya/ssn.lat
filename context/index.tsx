@@ -1,24 +1,24 @@
-import { ThemeProvider } from "next-themes";
-import { Settings } from "@/basehub";
+"use client"
 
-export function Providers({
-  children,
-  defaultTheme,
-  forcedTheme,
-}: {
-  children: React.ReactNode;
-  defaultTheme: Settings["defaultTheme"];
-  forcedTheme: Settings["forcedTheme"];
-}) {
+import { ThemeProvider } from "next-themes"
+import { ReactNode } from "react"
+
+interface ProvidersProps {
+  children: ReactNode
+  defaultTheme?: string
+  forcedTheme?: string
+}
+
+export function Providers({ children, defaultTheme = "system", forcedTheme }: ProvidersProps) {
   return (
     <ThemeProvider
+      attribute="class"
+      defaultTheme={defaultTheme}
+      forcedTheme={forcedTheme}
       enableSystem
       disableTransitionOnChange
-      attribute="class"
-      defaultTheme={defaultTheme || "system"}
-      forcedTheme={forcedTheme || undefined}
     >
       {children}
     </ThemeProvider>
-  );
+  )
 }
