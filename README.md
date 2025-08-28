@@ -2,7 +2,7 @@
 
 ![ssn.lat Screenshot](./public/ss.png)
 
-A modern, fast URL shortener built specifically for SSN College of Engineering students and the Lakshya E-Cell community. Transform your long URLs into clean, shareable links with custom aliases and real-time analytics.
+A modern, fast URL shortener built specifically for SSN College of Engineering students by the Lakshya E-Cell community. Transform your long URLs into clean, shareable links with custom aliases and real-time analytics.
 
 ## ✨ Features
 
@@ -188,6 +188,12 @@ Create a new short URL.
 ## 🤝 Contributing
 
 We welcome contributions from the SSN community! Please read our contributing guidelines and feel free to submit pull requests.
+
+## 🫂 Our Contributors
+
+<a href="https://github.com/ssnlakshya/ssn.lat/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ssnlakshya/ssn.lat" />
+</a>
 
 ## 📝 License
 
