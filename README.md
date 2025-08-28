@@ -1,4 +1,4 @@
-# ssn.lat
+# ssn.lat (Lakshya's Advanced TinyURLs)
 
 ![ssn.lat Screenshot](./public/ss.png)
 
