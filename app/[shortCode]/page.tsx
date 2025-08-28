@@ -44,3 +44,20 @@ export default async function RedirectPage({ params }: Props) {
     notFound()
   }
 }
+
+export async function generateMetadata({ params }: { params: { shortCode: string } }) {
+  const imageUrl = `https://ssn.lat/${params.shortCode}/og-image`
+  return {
+    title: "Your Page Title",
+    description: "A short description for social previews",
+    openGraph: {
+      images: [imageUrl],
+    },
+    twitter: {
+      card: "summary_large_image",
+      images: [imageUrl],
+    },
+  }
+}
+
+
