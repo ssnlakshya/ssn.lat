@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({
-      shortUrl: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://ssn.c'}/${shortCode}`,
+      shortUrl: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://ssn.lat'}/${shortCode}`,
       shortCode: shortCode!
     })
 

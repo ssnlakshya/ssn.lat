@@ -16,11 +16,11 @@ export function WaitlistWrapper({ children }: PropsWithChildren) {
           <div className="flex justify-center items-center gap-4 mx-auto">
             <Image
               src="/ssnlogo.webp"
-              alt="SSN.c Logo"
+              alt="ssn.lat Logo"
               width={80}
               height={80}
               priority
-              className="rounded-2xl"
+              className="dark:invert-0 invert"
             />
             <Image
               src="/lakshya.png"
@@ -36,7 +36,7 @@ export function WaitlistWrapper({ children }: PropsWithChildren) {
       </div>
       <footer className="flex justify-between items-center w-full self-stretch px-8 py-3 text-sm bg-gray-12/[.07] overflow-hidden">
         <p className="text-xs text-slate-10">
-          © 2025 SSN.c. All rights reserved.
+          © 2025 Lakshya E-Cell of SSN. All rights reserved.
         </p>
         <ThemeSwitcher />
       </footer>

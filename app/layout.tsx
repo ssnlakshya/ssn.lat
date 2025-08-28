@@ -60,7 +60,6 @@ export default async function RootLayout({
 }
 
 export const metadata = {
-  title: "SSN.c - URL Shortener",
-  description: "Transform your long URLs into clean, shareable links",
-  generator: 'v0.app'
+  title: "ssn.lat - URL Shortener",
+  description: "Transform your long URLs into clean, shareable links for SSN College of Engineering Students",
 }

@@ -15,10 +15,10 @@ export function Header() {
           <div className="px-4 py-2">
             <Image
               src="/ssnlogo.webp"
-              alt="SSN.c Logo"
+              alt="ssn.lat Logo"
               width={40}
               height={40}
-              className="rounded-lg"
+              className="dark:invert-0 invert"
             />
           </div>
         </div>

@@ -78,7 +78,7 @@ export default function Home() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-2xl sm:text-3xl font-semibold text-slate-12 text-balance">SSN.c</h1>
+        <h1 className="text-2xl sm:text-3xl font-semibold text-slate-12 text-balance">ssn.lat</h1>
         <p className="text-slate-10 text-pretty leading-relaxed">
           Transform your long URLs into clean, shareable links.
         </p>
