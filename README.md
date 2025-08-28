@@ -1,6 +1,6 @@
 # ssn.lat
 
-![ssn.lat Screenshot](ss.png)
+![ssn.lat Screenshot](./public/ss.png)
 
 A modern, fast URL shortener built specifically for SSN College of Engineering students and the Lakshya E-Cell community. Transform your long URLs into clean, shareable links with custom aliases and real-time analytics.
 
@@ -30,27 +30,30 @@ A modern, fast URL shortener built specifically for SSN College of Engineering s
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
 - Supabase account
 
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/yourusername/ssn.lat.git
    cd ssn.lat
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Set up Supabase**
+
    - Create a new project at [supabase.com](https://supabase.com)
    - Go to SQL Editor and run this schema:
-   
+
    ```sql
    CREATE TABLE urls (
      id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -65,9 +68,10 @@ A modern, fast URL shortener built specifically for SSN College of Engineering s
    ```
 
 4. **Environment Setup**
+
    - Copy `.env.example` to `.env.local`
    - Fill in your Supabase credentials:
-   
+
    ```env
    NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
@@ -75,6 +79,7 @@ A modern, fast URL shortener built specifically for SSN College of Engineering s
    ```
 
 5. **Run the development server**
+
    ```bash
    npm run dev
    ```
@@ -141,9 +146,11 @@ Table: urls
 ## 🔧 API Reference
 
 ### POST /api/shorten
+
 Create a new short URL.
 
 **Request Body:**
+
 ```json
 {
   "longUrl": "https://example.com/very/long/url",
@@ -152,6 +159,7 @@ Create a new short URL.
 ```
 
 **Response:**
+
 ```json
 {
   "shortUrl": "https://ssn.lat/mylink",
@@ -160,6 +168,7 @@ Create a new short URL.
 ```
 
 **Error Responses:**
+
 - `400`: Invalid URL or custom alias already exists
 - `500`: Internal server error
 
