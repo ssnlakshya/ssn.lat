@@ -3,6 +3,7 @@
 import { ThemeProvider } from "next-themes"
 import { ReactNode } from "react"
 
+
 interface ProvidersProps {
   children: ReactNode
   defaultTheme?: string
