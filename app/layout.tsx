@@ -29,6 +29,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+      <link rel="icon" href="/favicon.ico" />
         <Script
           defer
           src="https://cloud.umami.is/script.js"
