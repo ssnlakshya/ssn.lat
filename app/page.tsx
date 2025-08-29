@@ -7,24 +7,6 @@ import { WaitlistWrapper } from "@/components/box"
 import { useToast } from "@/hooks/use-toast"
 import { Copy, ExternalLink } from "lucide-react"
 
-export const metadata = {
-  openGraph: {
-    type: "website",
-    url: "https://ssn-lat.vercel.app/",
-    images: [
-      {
-        url: "https://ssn-lat.vercel.app/lakshya.png", 
-        width: 1200,
-        height: 630,
-        alt: "Lakshya Preview",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    images: ["https://ssn-lat.vercel.app/lakshya.png"], 
-  },
-};
 
 
 

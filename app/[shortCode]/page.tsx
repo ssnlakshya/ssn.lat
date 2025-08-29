@@ -1,6 +1,5 @@
 import { supabase } from '@/lib/supabase'
-import { redirect } from 'next/navigation'
-import { notFound } from 'next/navigation'
+import { redirect, notFound } from 'next/navigation'
 import ClientRedirect from './client-redirect'
 
 interface Props {
@@ -8,7 +7,7 @@ interface Props {
 }
 
 export default async function RedirectPage({ params }: Props) {
-  const { shortCode } = await params
+  const { shortCode } = params
 
   try {
     const { data: url, error } = await supabase
@@ -21,16 +20,13 @@ export default async function RedirectPage({ params }: Props) {
       notFound()
     }
 
-    // Increment click count
     await supabase
       .from('urls')
       .update({ click_count: (url.click_count || 0) + 1 })
       .eq('short_code', shortCode)
 
-    // Try server-side redirect first
     redirect(url.long_url)
   } catch (error) {
-    // If server redirect fails, try client-side redirect
     const { data: url } = await supabase
       .from('urls')
       .select('long_url')
@@ -59,5 +55,3 @@ export async function generateMetadata({ params }: { params: { shortCode: string
     },
   }
 }
-
-

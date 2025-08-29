@@ -8,7 +8,7 @@ interface ClientRedirectProps {
 
 export default function ClientRedirect({ url }: ClientRedirectProps) {
   useEffect(() => {
-    // Immediate redirect
+   
     window.location.href = url
   }, [url])
 

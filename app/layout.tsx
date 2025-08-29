@@ -20,6 +20,28 @@ export const viewport: Viewport = {
   maximumScale: 1,
 }
 
+export const metadata = {
+  title: "ssn.lat - URL Shortener",
+  description: "Transform your long URLs into clean, shareable links for SSN College of Engineering Students",
+  openGraph: {
+    type: "website",
+    url: "https://ssn-lat.vercel.app/",
+    images: [
+      {
+        url: "https://ssn-lat.vercel.app/lakshya.png", 
+        width: 1200,
+        height: 630,
+        alt: "Lakshya Preview",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["https://ssn-lat.vercel.app/lakshya.png"], 
+  },
+};
+
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -59,7 +81,3 @@ export default async function RootLayout({
   )
 }
 
-export const metadata = {
-  title: "ssn.lat - URL Shortener",
-  description: "Transform your long URLs into clean, shareable links for SSN College of Engineering Students",
-}
