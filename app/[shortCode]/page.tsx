@@ -3,11 +3,11 @@ import { redirect, notFound } from 'next/navigation'
 import ClientRedirect from './client-redirect'
 
 interface Props {
-  params: { shortCode: string }
+  params: Promise<{ shortCode: string }>
 }
 
 export default async function RedirectPage({ params }: Props) {
-  const { shortCode } = params
+  const { shortCode } = await params
 
   try {
     const { data: url, error } = await supabase
@@ -27,26 +27,31 @@ export default async function RedirectPage({ params }: Props) {
 
     redirect(url.long_url)
   } catch (error) {
-    const { data: url } = await supabase
+    const { data: fallback } = await supabase
       .from('urls')
       .select('long_url')
       .eq('short_code', shortCode)
       .single()
-    
-    if (url) {
-      return <ClientRedirect url={url.long_url} />
+
+    if (fallback) {
+      return <ClientRedirect url={fallback.long_url} />
     }
-    
+
     notFound()
   }
 }
 
-export async function generateMetadata({ params }: { params: { shortCode: string } }) {
-  const imageUrl = `https://ssn.lat/${params.shortCode}/og-image`
+export async function generateMetadata({ params }: { params: Promise<{ shortCode: string }> }) {
+  const { shortCode } = await params
+  const imageUrl = `/api/og/${shortCode}`
+
   return {
-    title: "Your Page Title",
-    description: "A short description for social previews",
+    title: "ssn.lat - URL Shortener",
+    description: "Transform your long URLs into clean, shareable links for SSN College of Engineering Students",
+    metadataBase: new URL("https://ssn.lat"), 
     openGraph: {
+      type: "website",
+      url: `https://ssn.lat/${shortCode}`,
       images: [imageUrl],
     },
     twitter: {
@@ -55,3 +60,4 @@ export async function generateMetadata({ params }: { params: { shortCode: string
     },
   }
 }
+
