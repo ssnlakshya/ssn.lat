@@ -15,14 +15,6 @@ export function WaitlistWrapper({ children }: PropsWithChildren) {
         <div>
           <div className="flex justify-center items-center gap-4 mx-auto">
             <Image
-              src="/ssnlogo.webp"
-              alt="ssn.lat Logo"
-              width={80}
-              height={80}
-              priority
-              className="dark:invert-0 invert"
-            />
-            <Image
               src="/lakshya.png"
               alt="Lakshya Logo"
               width={80}
