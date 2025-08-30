@@ -6,6 +6,7 @@ import { Header } from "@/components/header"
 import { MeshGradientComponent } from "@/components/mesh-gradient"
 import { Toaster } from "@/components/ui/toaster"
 import "./globals.css"
+import Script from "next/script"
 
 const bricolageGrotesque = Bricolage_Grotesque({
   variable: "--font-bricolage-grotesque",
@@ -27,6 +28,15 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+      <link rel="icon" href="/favicon.ico" />
+        <Script
+          defer
+          src="https://cloud.umami.is/script.js"
+          data-website-id="45028187-b981-47d2-9c78-73970e653e4a"
+          strategy="afterInteractive"
+        />
+      </head>
       <body className={`${bricolageGrotesque.className} antialiased max-w-screen min-h-svh bg-slate-1 text-slate-12`}>
         <Providers defaultTheme="system">
           <MeshGradientComponent

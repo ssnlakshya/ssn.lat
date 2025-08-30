@@ -79,9 +79,9 @@ const config: Config = {
         black: "#000000",
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        lg: "8px",
+        md: "6px",
+        sm: "4px",
       },
       fontSize: {
         "2xs": [
