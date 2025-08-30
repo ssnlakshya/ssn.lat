@@ -1,5 +1,9 @@
+"use client"
+
+import { RefObject } from "react"
 import Image from "next/image"
 import clsx from "clsx"
+import { useToast } from "@/hooks/use-toast"
 
 export function Header() {
   return (
