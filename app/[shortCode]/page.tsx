@@ -42,22 +42,21 @@ export default async function RedirectPage({ params }: Props) {
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ shortCode: string }> }) {
-  const { shortCode } = await params
-  const imageUrl = `/api/og/${shortCode}`
+  const { shortCode } = await params;
 
   return {
+    metadataBase: new URL('https://ssn.lat'), 
     title: "ssn.lat - URL Shortener",
     description: "Transform your long URLs into clean, shareable links for SSN College of Engineering Students",
-    metadataBase: new URL("https://ssn.lat"), 
     openGraph: {
       type: "website",
       url: `https://ssn.lat/${shortCode}`,
-      images: [imageUrl],
+      images: [`/api/og/${shortCode}`], 
     },
     twitter: {
       card: "summary_large_image",
-      images: [imageUrl],
-    },
-  }
+      images: [`/api/og/${shortCode}`],  
+  },
+};
 }
 
