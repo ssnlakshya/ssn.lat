@@ -2,7 +2,7 @@
 "use client"
 import { useState, useRef, useEffect } from "react"
 import type React from "react"
-import { QRCodeSVG } from "qrcode.react"
+import QRCode from "react-qr-code"
 import { useToast } from "@/hooks/use-toast"
 import { Copy, ExternalLink, QrCode, Download, ArrowLeft } from "lucide-react"
 
@@ -272,7 +272,7 @@ export function UrlShortenerForm({ isAliasValid }: UrlShortenerFormProps) {
         <div className="relative bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-950/20 dark:to-orange-900/20 border border-orange-200 dark:border-orange-800/30 rounded-xl p-4 flex flex-col items-center justify-center space-y-3 animate-in fade-in-50 slide-in-from-bottom-4 duration-500">
           <p className="text-xs text-orange-600 dark:text-orange-400 font-medium mb-1">QR Code for: {shortenedUrl}</p>
           <div ref={qrCodeRef} className="p-2 bg-white rounded-lg">
-            <QRCodeSVG value={shortenedUrl} size={180} level="H" />
+            <QRCode value={shortenedUrl} size={180} />
           </div>
           {qrCodeDataUrl && (
             <button
