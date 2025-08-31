@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/supabase'
-import { redirect, notFound } from 'next/navigation'
 import ClientRedirect from './client-redirect'
+import { notFound } from 'next/navigation'
+import { config } from '@/lib/config'
 
 interface Props {
   params: Promise<{ shortCode: string }>
@@ -9,54 +10,60 @@ interface Props {
 export default async function RedirectPage({ params }: Props) {
   const { shortCode } = await params
 
-  try {
-    const { data: url, error } = await supabase
-      .from('urls')
-      .select('long_url, click_count')
-      .eq('short_code', shortCode)
-      .single()
+  
+  const { data: url } = await supabase
+    .from('urls')
+    .select('long_url, click_count')
+    .eq('short_code', shortCode)
+    .single()
 
-    if (error || !url) {
-      notFound()
-    }
+  if (!url) notFound()
 
-    await supabase
-      .from('urls')
-      .update({ click_count: (url.click_count || 0) + 1 })
-      .eq('short_code', shortCode)
+ 
+  supabase
+    .from('urls')
+    .update({ click_count: (url.click_count || 0) + 1 })
+    .eq('short_code', shortCode)
 
-    redirect(url.long_url)
-  } catch (error) {
-    const { data: fallback } = await supabase
-      .from('urls')
-      .select('long_url')
-      .eq('short_code', shortCode)
-      .single()
-
-    if (fallback) {
-      return <ClientRedirect url={fallback.long_url} />
-    }
-
-    notFound()
-  }
+  
+  return <ClientRedirect url={url.long_url} />
 }
 
+
 export async function generateMetadata({ params }: { params: Promise<{ shortCode: string }> }) {
-  const { shortCode } = await params;
+  const { shortCode } = await params
+
+  const { data: url } = await supabase
+    .from('urls')
+    .select('long_url')
+    .eq('short_code', shortCode)
+    .single()
+
+  if (!url) return {}
+
+  const domain = config.getDomain()
+  // Use static image instead of dynamic API
+  const ogImageUrl = `${domain}/og-image.png`
 
   return {
-    metadataBase: new URL('https://ssn.lat'), 
-    title: "ssn.lat - URL Shortener",
+    metadataBase: new URL(domain),
+    title: `ssn.lat - Redirecting to ${url.long_url}`,
     description: "Transform your long URLs into clean, shareable links for SSN College of Engineering Students",
     openGraph: {
       type: "website",
-      url: `https://ssn.lat/${shortCode}`,
-      images: [`/api/og/${shortCode}`], 
+      url: `${domain}/${shortCode}`,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: "Lakshya URL Shortener",
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
-      images: [`/api/og/${shortCode}`],  
-  },
-};
+      images: [ogImageUrl]
+    },
+  }
 }
-

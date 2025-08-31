@@ -21,9 +21,13 @@ function isValidUrl(string: string): boolean {
 
 export async function POST(request: NextRequest) {
   try {
-    const { longUrl, customAlias } = await request.json()
-
-    if (!longUrl || !isValidUrl(longUrl)) {
+    const { url, customAlias } = await request.json()
+    
+    console.log('Received URL:', url)
+    console.log('Is valid URL:', isValidUrl(url))
+    
+    if (!url || !isValidUrl(url)) {
+      console.log('Validation failed - URL:', url)
       return NextResponse.json(
         { error: 'Invalid URL provided' },
         { status: 400 }
@@ -65,7 +69,7 @@ export async function POST(request: NextRequest) {
       .from('urls')
       .insert([
         {
-          long_url: longUrl,
+          long_url: url,
           short_code: shortCode!,
           custom_alias: customAlias || null,
           click_count: 0
@@ -94,3 +98,5 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+

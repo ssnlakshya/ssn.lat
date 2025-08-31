@@ -8,7 +8,14 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
+  serverExternalPackages: ['@vercel/og'],
 }
 
 export default nextConfig

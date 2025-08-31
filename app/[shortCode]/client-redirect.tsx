@@ -8,8 +8,9 @@ interface ClientRedirectProps {
 
 export default function ClientRedirect({ url }: ClientRedirectProps) {
   useEffect(() => {
-   
-    window.location.href = url
+    if (url) {
+      window.location.href = url
+    }
   }, [url])
 
   return (
@@ -22,7 +23,7 @@ export default function ClientRedirect({ url }: ClientRedirectProps) {
         <p className="text-gray-600 text-sm mb-4">
           Taking you to your destination
         </p>
-        <a 
+        <a
           href={url}
           className="text-orange-500 hover:text-orange-600 underline text-sm"
         >

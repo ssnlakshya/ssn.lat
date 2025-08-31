@@ -24,6 +24,7 @@
     "next-themes": "latest",
     "react": "^19",
     "react-dom": "^19",
+    "sharp": "^0.34.3",
     "sonner": "^1.7.1",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
@@ -31,7 +32,7 @@
   },
   "devDependencies": {
     "@types/node": "^22",
-    "@types/react": "^19",
+    "@types/react": "^19.1.12",
     "@types/react-dom": "^19",
     "postcss": "^8.5",
     "tailwindcss": "^3.4.17",
