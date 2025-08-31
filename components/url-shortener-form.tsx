@@ -158,8 +158,8 @@ export function UrlShortenerForm({ isAliasValid }: UrlShortenerFormProps) {
   };
 
   const resetForm = () => {
-    setUrl("");
-    setCustomAlias("");
+    setUrl(""); // Clear the original URL input
+    setCustomAlias(""); // Clear the custom alias input
     setShortenedUrl("");
     setIsLoading(false);
     setShowQrCode(false);
@@ -168,9 +168,9 @@ export function UrlShortenerForm({ isAliasValid }: UrlShortenerFormProps) {
 
   return (
     <div className="w-full space-y-6 relative">
-      {shortenedUrl && (
+      {shortenedUrl && showQrCode && (
         <button
-          onClick={resetForm}
+          onClick={() => setShowQrCode(false)}
           className="absolute top-0 left-0 text-orange-500 hover:text-orange-600 transition-colors flex items-center gap-1"
           aria-label="Back"
         >
@@ -242,9 +242,19 @@ export function UrlShortenerForm({ isAliasValid }: UrlShortenerFormProps) {
 
       {shortenedUrl && !showQrCode && (
         <div className="bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-950/20 dark:to-orange-900/20 border border-orange-200 dark:border-orange-800/30 rounded-xl p-4 space-y-3 animate-in fade-in-50 slide-in-from-bottom-4 duration-500">
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-xs text-orange-600 dark:text-orange-400 font-medium">Your shortened URL:</p>
+            <button
+              onClick={resetForm}
+              className="text-orange-500 hover:text-orange-600 transition-colors flex items-center gap-1"
+              aria-label="Back to form"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span className="sr-only">Back to form</span>
+            </button>
+          </div>
           <div className="flex items-center justify-between gap-3">
             <div className="flex-1 min-w-0">
-              <p className="text-xs text-orange-600 dark:text-orange-400 font-medium mb-1">Your shortened URL:</p>
               <div className="flex items-center gap-2">
                 <a
                   href={shortenedUrl}
