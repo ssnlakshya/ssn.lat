@@ -154,9 +154,12 @@ export function UrlShortenerForm() {
 
   return (
     <div className="w-full space-y-6 relative">
-      {shortenedUrl && (
+      {shortenedUrl && showQrCode && (
         <button
-          onClick={resetForm}
+          onClick={() => {
+            setShowQrCode(false);
+            setShortenedUrl("");
+          }}
           className="absolute top-0 left-0 text-orange-500 hover:text-orange-600 transition-colors flex items-center gap-1"
           aria-label="Back"
         >
