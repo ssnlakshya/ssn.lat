@@ -2,7 +2,6 @@ import type React from "react"
 import type { Viewport } from "next"
 import { Bricolage_Grotesque } from "next/font/google"
 import { Providers } from "@/context"
-import { Header } from "@/components/header"
 import { MeshGradientComponent } from "@/components/mesh-gradient"
 import { Toaster } from "@/components/ui/toaster"
 import "./globals.css"
@@ -57,8 +56,7 @@ export default async function RootLayout({
             }}
           />
           <div className="max-w-screen-sm mx-auto w-full relative z-[1] flex flex-col min-h-screen">
-            <div className="px-5 gap-8 flex flex-col flex-1 py-[12vh]">
-              <Header />
+            <div className="px-5 gap-8 flex flex-col flex-1">
               <main className="flex justify-center">{children}</main>
             </div>
           </div>
