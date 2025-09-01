@@ -1,12 +1,17 @@
 "use client"
-"use client"
+import { useState } from "react"
 import { motion } from "framer-motion"
 import { WaitlistWrapper } from "@/components/box"
 import { Filter } from "bad-words";
 import words from "an-array-of-english-words";
 import { UrlShortenerForm } from "@/components/url-shortener-form"
+import { QrCodeGenerator } from "@/components/qr-code-generator"
+import { Header } from "@/components/header" // Import Header
 
 export default function Home() {
+  const [activeTab, setActiveTab] = useState("url"); // "url", "qr", "about"
+  const [url, setUrl] = useState(""); // Shared URL state
+
   const filter = new Filter();
 
   // Helper: check if a string is a real English word
@@ -37,21 +42,49 @@ export default function Home() {
     return true
   }
 
-  return (
-    <WaitlistWrapper>
-      <motion.div
-        className="space-y-2"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <h1 className="text-2xl sm:text-3xl font-semibold text-slate-12 text-balance">ssn.lat</h1>
-        <p className="text-slate-10 text-pretty leading-relaxed">
-          Transform your long URLs into clean, shareable links.
-        </p>
-      </motion.div>
+  const resetParentForm = () => {
+    setUrl("");
+    setActiveTab("url");
+  };
 
-      <UrlShortenerForm isAliasValid={isAliasValid} />
-    </WaitlistWrapper>
+  return (
+    <>
+      <Header activeTab={activeTab} setActiveTab={setActiveTab} /> {/* Render Header here */}
+      <WaitlistWrapper>
+        <motion.div
+          className="space-y-2"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h1 className="text-2xl sm:text-3xl font-semibold text-slate-12 text-balance">ssn.lat</h1>
+          <p className="text-slate-10 text-pretty leading-relaxed">
+            Transform your long URLs into clean, shareable links.
+          </p>
+        </motion.div>
+
+        {activeTab === "url" && (
+          <UrlShortenerForm
+            isAliasValid={isAliasValid}
+            url={url}
+            setUrl={setUrl}
+            resetParentForm={resetParentForm}
+          />
+        )}
+
+        {activeTab === "qr" && (
+          <QrCodeGenerator
+            url={url}
+            setUrl={setUrl}
+          />
+        )}
+
+        {activeTab === "about" && (
+          <div className="text-slate-10 text-pretty leading-relaxed">
+            {/* About Us content will go here */}
+          </div>
+        )}
+      </WaitlistWrapper>
+    </>
   )
 }
