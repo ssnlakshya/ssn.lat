@@ -20,10 +20,10 @@ export function Header({ activeTab, setActiveTab }: HeaderProps) {
         >
           <div className="flex items-center gap-6 px-6 py-3">
             <button
-              onClick={() => setActiveTab("about")}
-              className={`text-lg font-medium ${activeTab === "about" ? "text-orange-500" : "text-slate-10 hover:text-orange-400"}`}
+              onClick={() => setActiveTab("abt")}
+              className={`text-lg font-medium ${activeTab === "abt" ? "text-orange-500" : "text-slate-10 hover:text-orange-400"}`}
             >
-              about
+              abt
             </button>
             <button
               onClick={() => setActiveTab("url")}

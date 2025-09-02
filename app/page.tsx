@@ -79,7 +79,7 @@ export default function Home() {
           />
         )}
 
-        {activeTab === "about" && (
+        {activeTab === "abt" && (
           <div className="text-slate-10 text-pretty leading-relaxed">
             {/* About Us content will go here */}
           </div>

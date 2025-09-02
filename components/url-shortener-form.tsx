@@ -22,6 +22,12 @@ export function UrlShortenerForm({ isAliasValid, url, setUrl, resetParentForm }:
   const qrCodeRef = useRef<HTMLDivElement>(null)
   const { toast } = useToast()
 
+  function isValidHttpUrl(value: string): boolean {
+    const regex = /^(https?:\/\/)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/;
+    return regex.test(value.trim());
+  }
+
+
   const handleShorten = async (e: React.FormEvent) => {
     e.preventDefault()
     console.log("handleShorten called"); // Debug log
@@ -33,6 +39,15 @@ export function UrlShortenerForm({ isAliasValid, url, setUrl, resetParentForm }:
         description: "Your custom alias contains inappropriate words.",
         variant: "destructive",
       });
+      return;
+    }
+
+    if (!isValidHttpUrl(url)){
+      toast({
+        title: "Invalid URL",
+        description: "Please enter a valid http(s) link.",
+        variant: "destructive",
+      })
       return;
     }
 
