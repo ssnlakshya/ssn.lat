@@ -8,9 +8,10 @@ import { Download, Copy, ArrowLeft } from "lucide-react" // Import Copy and Arro
 interface QrCodeGeneratorProps {
   url: string;
   setUrl: React.Dispatch<React.SetStateAction<string>>;
+  isValidHttpUrl: (alias: string) => boolean;
 }
 
-export function QrCodeGenerator({ url, setUrl }: QrCodeGeneratorProps) {
+export function QrCodeGenerator({ url, setUrl, isValidHttpUrl }: QrCodeGeneratorProps) {
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState("")
   const [showQrCode, setShowQrCode] = useState(false) // New state to control QR code visibility
   const qrCodeRef = useRef<HTMLDivElement>(null)
@@ -43,6 +44,15 @@ export function QrCodeGenerator({ url, setUrl }: QrCodeGeneratorProps) {
   }, [url, showQrCode]); // Depend on showQrCode as well
 
   const handleGenerateQrCode = async () => {
+    if (!isValidHttpUrl(url)){
+      toast({
+        title: "Invalid URL",
+        description: "Please enter a valid http(s) link.",
+        variant: "destructive",
+      })
+      return;
+    }
+
     if (url) {
       setShowQrCode(true);
       // The QR code generation and copy to clipboard will now be handled by the useEffect hooks
@@ -109,7 +119,14 @@ export function QrCodeGenerator({ url, setUrl }: QrCodeGeneratorProps) {
 
   return (
     <div className="w-full space-y-6 relative">
-      <div className="space-y-3">
+      {/* <div className="space-y-3"> */}
+      <form 
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleGenerateQrCode();
+        }}
+        className="space-y-3"
+      >
         <input
           type="url"
           value={url}
@@ -128,7 +145,8 @@ export function QrCodeGenerator({ url, setUrl }: QrCodeGeneratorProps) {
         >
           Generate QR Code
         </button>
-      </div>
+      </form>
+      {/* </div> */}
 
       {showQrCode && url && ( // Only show QR code if showQrCode is true and URL is present
         <div className="relative bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-950/20 dark:to-orange-900/20 border border-orange-200 dark:border-orange-800/30 rounded-xl p-4 flex flex-col items-center justify-center space-y-3 animate-in fade-in-50 slide-in-from-bottom-4 duration-500">

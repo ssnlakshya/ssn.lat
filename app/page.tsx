@@ -42,6 +42,11 @@ export default function Home() {
     return true
   }
 
+  function isValidHttpUrl(value: string): boolean {
+    const regex = /^(https?:\/\/)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/;
+    return regex.test(value.trim());
+  }
+
   const resetParentForm = () => {
     setUrl("");
     setActiveTab("url");
@@ -66,6 +71,7 @@ export default function Home() {
         {activeTab === "url" && (
           <UrlShortenerForm
             isAliasValid={isAliasValid}
+            isValidHttpUrl={isValidHttpUrl}
             url={url}
             setUrl={setUrl}
             resetParentForm={resetParentForm}
@@ -76,6 +82,7 @@ export default function Home() {
           <QrCodeGenerator
             url={url}
             setUrl={setUrl}
+            isValidHttpUrl={isValidHttpUrl}
           />
         )}
 
