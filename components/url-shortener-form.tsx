@@ -7,12 +7,13 @@ import QRCode from "react-qr-code"
 
 interface UrlShortenerFormProps {
   isAliasValid: (alias: string) => boolean;
+  isValidHttpUrl: (alias: string) => boolean;
   url: string;
   setUrl: React.Dispatch<React.SetStateAction<string>>;
   resetParentForm: () => void;
 }
 
-export function UrlShortenerForm({ isAliasValid, url, setUrl, resetParentForm }: UrlShortenerFormProps) {
+export function UrlShortenerForm({ isAliasValid, isValidHttpUrl, url, setUrl, resetParentForm }: UrlShortenerFormProps) {
   console.log("UrlShortenerForm re-rendered"); // Debug log for re-renders
   const [customAlias, setCustomAlias] = useState("")
   const [shortenedUrl, setShortenedUrl] = useState("")
@@ -21,11 +22,6 @@ export function UrlShortenerForm({ isAliasValid, url, setUrl, resetParentForm }:
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState("")
   const qrCodeRef = useRef<HTMLDivElement>(null)
   const { toast } = useToast()
-
-  function isValidHttpUrl(value: string): boolean {
-    const regex = /^(https?:\/\/)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/;
-    return regex.test(value.trim());
-  }
 
 
   const handleShorten = async (e: React.FormEvent) => {
