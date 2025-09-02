@@ -45,7 +45,7 @@ export function UrlShortenerForm({ isAliasValid, url, setUrl, resetParentForm }:
     if (!isValidHttpUrl(url)){
       toast({
         title: "Invalid URL",
-        description: "Please enter a valid https(s) link.",
+        description: "Please enter a valid http(s) link.",
         variant: "destructive",
       })
       return;
