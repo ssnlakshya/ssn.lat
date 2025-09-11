@@ -27,7 +27,6 @@ export async function GET(
     // Derive domain from the incoming request URL to work reliably on Edge
     const { origin } = new URL(_req.url);
     longUrl = longUrl || origin; // fallback to domain
-    const logoUrl = `${origin}/lakshya.png`;
 
     
     return new ImageResponse(
@@ -104,7 +103,7 @@ export async function GET(
     height: 300,
     borderRadius: "50%",
     background: "linear-gradient(135deg, #FFA500, #FFDD99)",
-    padding: 12, // thinner border
+    padding: 12,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -113,7 +112,6 @@ export async function GET(
     marginBottom: 40,
   }}
 >
-  {/* Glow halo */}
   <div
     style={{
       position: "absolute",
@@ -127,7 +125,6 @@ export async function GET(
       zIndex: -1,
     }}
   />
-
   <div
     style={{
       width: "100%",
@@ -135,21 +132,21 @@ export async function GET(
       borderRadius: "50%",
       background: "#fff",
       display: "flex",
-      flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
-      padding: 15,
     }}
   >
-
-          {/* Logo */}
-          <img
-            src={logoUrl}
-            alt="Lakshya Logo"
-            width={180}
-            height={180}
-            style={{ marginBottom: 30 }}
-          /></div>
+    <span
+      style={{
+        fontSize: 120,
+        fontWeight: 800,
+        color: "#FF6B35",
+        letterSpacing: "-2px",
+      }}
+    >
+      L
+    </span>
+  </div>
           </div>
 
           {/* Title */}
