@@ -11,21 +11,23 @@ export async function GET(
 ) {
   try {
     const { shortCode } = await ctx.params;
-
-    const { data, error } = await supabase
-      .from("urls")
-      .select("long_url")
-      .eq("short_code", shortCode)
-      .single();
-
-    if (error) {
-      console.error("Database error:", error);
-      return Response.json({ error: "Database error" }, { status: 500 });
+    // Try to read the long URL, but do not fail OG generation if not found
+    let longUrl: string | undefined;
+    try {
+      const { data } = await supabase
+        .from("urls")
+        .select("long_url")
+        .eq("short_code", shortCode)
+        .single();
+      longUrl = data?.long_url;
+    } catch (dbErr) {
+      console.warn("OG: non-fatal DB error:", dbErr);
     }
 
-    const longUrl = data?.long_url || config.getDomain(); // kept for parity
-    const domain = config.getDomain();
-    const logoUrl = `${domain}/lakshya.png`;
+    // Derive domain from the incoming request URL to work reliably on Edge
+    const { origin } = new URL(_req.url);
+    longUrl = longUrl || origin; // fallback to domain
+    const logoUrl = `${origin}/lakshya.png`;
 
     
     return new ImageResponse(
@@ -142,9 +144,11 @@ export async function GET(
 
           {/* Logo */}
           <img
-            src="https://ssn.lat/lakshya.png"
+            src={logoUrl}
             alt="Lakshya Logo"
-            style={{ width: 180, height: 180, marginBottom: 30 }}
+            width={180}
+            height={180}
+            style={{ marginBottom: 30 }}
           /></div>
           </div>
 

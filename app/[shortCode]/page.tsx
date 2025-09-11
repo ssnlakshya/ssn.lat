@@ -3,12 +3,11 @@ import ClientRedirect from './client-redirect'
 import { notFound } from 'next/navigation'
 import { config } from '@/lib/config'
 
-interface Props {
-  params: Promise<{ shortCode: string }>
-}
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
-export default async function RedirectPage({ params }: Props) {
-  const { shortCode } = await params
+export default async function RedirectPage({ params }: { params: { shortCode: string } }) {
+  const { shortCode } = params
 
   
   const { data: url } = await supabase
@@ -30,8 +29,8 @@ export default async function RedirectPage({ params }: Props) {
 }
 
 
-export async function generateMetadata({ params }: { params: Promise<{ shortCode: string }> }) {
-  const { shortCode } = await params
+export async function generateMetadata({ params }: { params: { shortCode: string } }) {
+  const { shortCode } = params
 
   const { data: url } = await supabase
     .from('urls')
@@ -44,7 +43,7 @@ export async function generateMetadata({ params }: { params: Promise<{ shortCode
   const domain = config.getDomain()
   // Use static image instead of dynamic API
   const ogImageUrl = `${domain}/api/shorten/og-image/${shortCode}`
-  
+
   return {
     metadataBase: new URL(domain),
     title: `ssn.lat - Redirecting to ${url.long_url}`,
