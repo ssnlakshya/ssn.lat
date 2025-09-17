@@ -3,14 +3,19 @@ import ClientRedirect from './client-redirect'
 import { notFound } from 'next/navigation'
 import { config } from '@/lib/config'
 import { headers } from 'next/headers'
+<<<<<<< HEAD
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+=======
+>>>>>>> a9c82e318444e69705a23d4b9d7345d0b236e23f
+
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
-interface Props {
-  params: Promise<{ shortCode: string }>
-}
+<<<<<<< HEAD
 
-
+=======
+>>>>>>> a9c82e318444e69705a23d4b9d7345d0b236e23f
 export default async function RedirectPage({ params }: { params: { shortCode: string } }) {
   const { shortCode } = params
 
@@ -43,6 +48,7 @@ export async function generateMetadata({ params }: { params: { shortCode: string
     .eq('short_code', shortCode)
     .single()
 
+<<<<<<< HEAD
  if (!url) return {};
 
   const hdrs = await headers();
@@ -60,6 +66,15 @@ export async function generateMetadata({ params }: { params: { shortCode: string
   
   const ogImageUrl = `${domain}/api/og-image/${shortCode}`;
 
+=======
+  // Derive domain from request headers so preview deployments generate correct absolute URLs
+  const hdrs = await headers()
+  const host = hdrs.get('x-forwarded-host') || hdrs.get('host') || config.getDomain().replace(/^https?:\/\//, '')
+  const proto = hdrs.get('x-forwarded-proto') || 'https'
+  const domain = `${proto}://${host}`
+  // Prefer dynamic OG; fallback to static image if unavailable
+  const ogImageUrl = `${domain}/api/shorten/og-image/${shortCode}`
+>>>>>>> a9c82e318444e69705a23d4b9d7345d0b236e23f
   const fallbackImageUrl = `${domain}/lakshya.png`
 
   return {

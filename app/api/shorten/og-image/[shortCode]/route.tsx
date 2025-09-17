@@ -11,7 +11,11 @@ export async function GET(
 ) {
   try {
     const { shortCode } = await ctx.params;
+<<<<<<< HEAD
 
+=======
+    // Try to read the long URL, but do not fail OG generation if not found
+>>>>>>> a9c82e318444e69705a23d4b9d7345d0b236e23f
     let longUrl: string | undefined;
     try {
       const { data } = await supabase
@@ -24,8 +28,15 @@ export async function GET(
       console.warn("OG: non-fatal DB error:", dbErr);
     }
 
+<<<<<<< HEAD
     const { origin } = new URL(_req.url);
     longUrl = longUrl || origin; // fallback to domain
+=======
+    // Derive domain from the incoming request URL to work reliably on Edge
+    const { origin } = new URL(_req.url);
+    longUrl = longUrl || origin; // fallback to domain
+
+>>>>>>> a9c82e318444e69705a23d4b9d7345d0b236e23f
     
     return new ImageResponse(
     (
@@ -101,7 +112,11 @@ export async function GET(
     height: 300,
     borderRadius: "50%",
     background: "linear-gradient(135deg, #FFA500, #FFDD99)",
+<<<<<<< HEAD
     padding: 12, 
+=======
+    padding: 12,
+>>>>>>> a9c82e318444e69705a23d4b9d7345d0b236e23f
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -110,7 +125,6 @@ export async function GET(
     marginBottom: 40,
   }}
 >
-  {/* Glow halo */}
   <div
     style={{
       position: "absolute",
@@ -124,7 +138,6 @@ export async function GET(
       zIndex: -1,
     }}
   />
-
   <div
     style={{
       width: "100%",
@@ -132,10 +145,8 @@ export async function GET(
       borderRadius: "50%",
       background: "#fff",
       display: "flex",
-      flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
-      padding: 15,
     }}
   >
     <span
@@ -148,6 +159,7 @@ export async function GET(
     >
       L
     </span>
+<<<<<<< HEAD
 
           {/* Logo */}
           <img
@@ -156,6 +168,9 @@ export async function GET(
             height={180}
             style={{ marginBottom: 30 }}
           /></div>
+=======
+  </div>
+>>>>>>> a9c82e318444e69705a23d4b9d7345d0b236e23f
           </div>
           
 
