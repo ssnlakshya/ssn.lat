@@ -1,4 +1,4 @@
-// app/api/shorten/og-image/[shortCode]/route.tsx
+
 import { ImageResponse } from "next/og";
 import { supabase } from "@/lib/supabase";
 import { config } from "@/lib/config";
@@ -12,21 +12,20 @@ export async function GET(
   try {
     const { shortCode } = await ctx.params;
 
-    const { data, error } = await supabase
-      .from("urls")
-      .select("long_url")
-      .eq("short_code", shortCode)
-      .single();
-
-    if (error) {
-      console.error("Database error:", error);
-      return Response.json({ error: "Database error" }, { status: 500 });
+    let longUrl: string | undefined;
+    try {
+      const { data } = await supabase
+        .from("urls")
+        .select("long_url")
+        .eq("short_code", shortCode)
+        .single();
+      longUrl = data?.long_url;
+    } catch (dbErr) {
+      console.warn("OG: non-fatal DB error:", dbErr);
     }
 
-    const longUrl = data?.long_url || config.getDomain(); // kept for parity
-    const domain = config.getDomain();
-    const logoUrl = `${domain}/lakshya.png`;
-
+    const { origin } = new URL(_req.url);
+    longUrl = longUrl || origin; // fallback to domain
     
     return new ImageResponse(
     (
@@ -102,7 +101,7 @@ export async function GET(
     height: 300,
     borderRadius: "50%",
     background: "linear-gradient(135deg, #FFA500, #FFDD99)",
-    padding: 12, // thinner border
+    padding: 12, 
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -139,14 +138,26 @@ export async function GET(
       padding: 15,
     }}
   >
+    <span
+      style={{
+        fontSize: 120,
+        fontWeight: 800,
+        color: "#FF6B35",
+        letterSpacing: "-2px",
+      }}
+    >
+      L
+    </span>
 
           {/* Logo */}
           <img
-            src="https://ssn.lat/lakshya.png"
-            alt="Lakshya Logo"
-            style={{ width: 180, height: 180, marginBottom: 30 }}
+            src={longUrl}
+             width={180}
+            height={180}
+            style={{ marginBottom: 30 }}
           /></div>
           </div>
+          
 
           {/* Title */}
           <h1

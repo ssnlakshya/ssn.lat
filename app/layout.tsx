@@ -21,6 +21,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata = {
+  metadataBase: new URL('https://ssn.lat'),
   title: "ssn.lat - URL Shortener",
   description: "Transform your long URLs into clean, shareable links for SSN College of Engineering Students",
   openGraph: {
@@ -40,6 +41,7 @@ export const metadata = {
     images: ["/lakshya.png"], 
   },
 };
+
 
 
 export default async function RootLayout({
