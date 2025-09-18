@@ -7,6 +7,7 @@ import words from "an-array-of-english-words";
 import { UrlShortenerForm } from "@/components/url-shortener-form"
 import { QrCodeGenerator } from "@/components/qr-code-generator"
 import { Header } from "@/components/header" // Import Header
+import About from "@/components/abt-page";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("url"); // "url", "qr", "about"
@@ -55,6 +56,12 @@ export default function Home() {
   return (
     <>
       <Header activeTab={activeTab} setActiveTab={setActiveTab} /> {/* Render Header here */}
+      <motion.div
+        className="mx-auto"
+        initial={{ maxWidth: 500 }}
+        animate={{ maxWidth: activeTab === "abt" ? 1500 : 500 }}
+        transition={{ duration: 0.4, ease: "easeInOut" }}
+      >
       <WaitlistWrapper>
         <motion.div
           className="space-y-2"
@@ -67,7 +74,14 @@ export default function Home() {
             Transform your long URLs into clean, shareable links.
           </p>
         </motion.div>
-
+        {/* <motion.div
+          className="mx-auto"
+          style={{ maxWidth: "600px" }}
+          animate={{
+            maxWidth: activeTab === "abt" ? "1200px" : "600px", // adjust as you like
+          }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
+        > */}
         {activeTab === "url" && (
           <UrlShortenerForm
             isAliasValid={isAliasValid}
@@ -88,10 +102,12 @@ export default function Home() {
 
         {activeTab === "abt" && (
           <div className="text-slate-10 text-pretty leading-relaxed">
-            {/* About Us content will go here */}
+            <About />
           </div>
         )}
+        {/* </motion.div> */}
       </WaitlistWrapper>
+      </motion.div>
     </>
   )
 }
