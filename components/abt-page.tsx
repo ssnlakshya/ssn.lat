@@ -37,7 +37,7 @@ export default function About() {
         </p>
 
         {/* GitHub + Footer */}
-        <div className="mt-10 flex items-center gap-2">
+        <div className="mt-10 flex justify-center items-center gap-2">
           <a 
             href="https://github.com/ssnlakshya/ssn.lat" 
             target="_blank" 
@@ -51,6 +51,9 @@ export default function About() {
 
         <p className="mt-6 text-sm text-gray-400">
           Made with <span className="text-orange-400">🧡</span> by Lakshya's Technical Team
+        </p>
+        <p className="mt-6 text-sm text-gray-400">
+          <span className="text-orange-400">(Prawin, Yuvashree, Harini, Yuvashree, Nanditha)</span> 
         </p>
       </div>
     // </div>
