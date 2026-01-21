@@ -17,6 +17,8 @@ export function UrlShortenerForm({ isAliasValid, isValidHttpUrl, url, setUrl, re
   console.log("UrlShortenerForm re-rendered"); // Debug log for re-renders
   const [customAlias, setCustomAlias] = useState("")
   const [shortenedUrl, setShortenedUrl] = useState("")
+  const [analyticsUrl, setAnalyticsUrl] = useState<string | null>(null)
+  const [enableAnalytics, setEnableAnalytics] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [showQrCodeSection, setShowQrCodeSection] = useState(false) // State to control QR code section visibility
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState("")
@@ -59,6 +61,7 @@ export function UrlShortenerForm({ isAliasValid, isValidHttpUrl, url, setUrl, re
         body: JSON.stringify({
           longUrl: url,
           customAlias: customAlias || undefined,
+          enableAnalytics: enableAnalytics,
         }),
       })
 
@@ -69,6 +72,9 @@ export function UrlShortenerForm({ isAliasValid, isValidHttpUrl, url, setUrl, re
       }
 
       setShortenedUrl(data.shortUrl)
+      if (data.analyticsUrl) {
+        setAnalyticsUrl(data.analyticsUrl)
+      }
       toast({
         title: "URL Shortened!",
         description: "Your short URL has been created successfully.",
@@ -183,6 +189,8 @@ export function UrlShortenerForm({ isAliasValid, isValidHttpUrl, url, setUrl, re
     setUrl(""); // Clear the original URL input
     setCustomAlias(""); // Clear the custom alias input
     setShortenedUrl("");
+    setAnalyticsUrl(null);
+    setEnableAnalytics(false);
     setIsLoading(false);
     setShowQrCodeSection(false);
     setQrCodeDataUrl("");
@@ -209,6 +217,7 @@ export function UrlShortenerForm({ isAliasValid, isValidHttpUrl, url, setUrl, re
             onChange={(e) => {
               setUrl(e.target.value);
               setShortenedUrl(""); // Clear shortened URL when original URL changes
+              setAnalyticsUrl(null);
               setShowQrCodeSection(false); // Hide QR code section
             }}
             placeholder="Paste your long URL here..."
@@ -225,6 +234,25 @@ export function UrlShortenerForm({ isAliasValid, isValidHttpUrl, url, setUrl, re
             className="w-full px-4 py-3 bg-gray-11/5 border border-gray-11/10 rounded-xl text-slate-12 placeholder:text-gray-9 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500/30 transition-all"
             disabled={isLoading || shortenedUrl !== ""} // Disable input if URL is shortened
           />
+
+          {/* Analytics Toggle */}
+          <div className="flex items-center gap-3 bg-orange-500/5 border border-orange-500/10 rounded-xl p-3">
+            <input
+              type="checkbox"
+              id="enable-analytics"
+              checked={enableAnalytics}
+              onChange={(e) => setEnableAnalytics(e.target.checked)}
+              disabled={isLoading || shortenedUrl !== ""}
+              className="w-4 h-4 rounded cursor-pointer accent-orange-500"
+            />
+            <label
+              htmlFor="enable-analytics"
+              className="flex-1 cursor-pointer select-none text-sm text-slate-11 font-medium"
+            >
+              Enable Analytics
+            </label>
+            <span className="text-xs text-slate-10">Get a shareable analytics link</span>
+          </div>
         </div>
 
         <button
@@ -271,6 +299,46 @@ export function UrlShortenerForm({ isAliasValid, isValidHttpUrl, url, setUrl, re
               </button>
             </div>
           </div>
+
+          {/* Analytics Link Card */}
+          {analyticsUrl && (
+            <div className="bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-950/20 dark:to-orange-900/20 border border-orange-200 dark:border-orange-800/30 rounded-xl p-4 space-y-3 animate-in fade-in-50 slide-in-from-bottom-4 duration-500">
+              <p className="text-xs text-orange-600 dark:text-orange-400 font-medium">Analytics Dashboard:</p>
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <a
+                      href={analyticsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-orange-700 dark:text-orange-300 font-medium hover:underline truncate flex items-center gap-1 text-sm"
+                    >
+                      {analyticsUrl.replace('https://', '').replace('http://', '')}
+                      <ExternalLink className="w-3 h-3 flex-shrink-0" />
+                    </a>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(analyticsUrl)
+                    toast({
+                      title: "Copied!",
+                      description: "Analytics link copied to clipboard.",
+                    })
+                  }}
+                  className="flex items-center gap-1 bg-orange-600 hover:bg-orange-700 text-white text-xs font-medium px-3 py-2 rounded-lg transition-colors"
+                >
+                  <Copy className="w-3 h-3" />
+                  Copy
+                </button>
+              </div>
+              <p className="text-xs text-orange-600/70 dark:text-orange-400/70">
+                Share this link to let anyone view analytics without revealing the short code.
+              </p>
+            </div>
+          )}
+
           {!showQrCodeSection && (
             <button
               type="button"

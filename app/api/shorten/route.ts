@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { randomBytes } from 'crypto'
 
 function generateShortCode(): string {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
@@ -8,6 +9,11 @@ function generateShortCode(): string {
     result += chars.charAt(Math.floor(Math.random() * chars.length))
   }
   return result
+}
+
+function generateAnalyticsToken(): string {
+  // Generate 12 random bytes and convert to base36 alphanumeric (0-9, a-z)
+  return randomBytes(9).toString('hex').slice(0, 16)
 }
 
 function isValidUrl(string: string): boolean {
@@ -21,7 +27,7 @@ function isValidUrl(string: string): boolean {
 
 export async function POST(request: NextRequest) {
   try {
-    const { longUrl, customAlias } = await request.json()
+    const { longUrl, customAlias, enableAnalytics } = await request.json()
 
     if (!longUrl || !isValidUrl(longUrl)) {
       return NextResponse.json(
@@ -61,6 +67,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Generate analytics token if enabled
+    const analyticsToken = enableAnalytics ? generateAnalyticsToken() : null
+
     const { data, error } = await supabase
       .from('urls')
       .insert([
@@ -68,7 +77,8 @@ export async function POST(request: NextRequest) {
           long_url: longUrl,
           short_code: shortCode!,
           custom_alias: customAlias || null,
-          click_count: 0
+          click_count: 0,
+          analytics_token: analyticsToken
         }
       ])
       .select()
@@ -83,7 +93,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       shortUrl: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://ssn.lat'}/${shortCode}`,
-      shortCode: shortCode!
+      shortCode: shortCode!,
+      analyticsToken: analyticsToken,
+      analyticsUrl: analyticsToken ? `${process.env.NEXT_PUBLIC_SITE_URL || 'https://ssn.lat'}/a/${analyticsToken}` : null
     })
 
   } catch (error) {
