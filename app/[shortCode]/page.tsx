@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/supabase'
 import { redirect } from 'next/navigation'
 import { notFound } from 'next/navigation'
+import { headers } from 'next/headers'
 import ClientRedirect from './client-redirect'
 
 interface Props {
@@ -20,6 +21,25 @@ export default async function RedirectPage({ params }: Props) {
     if (error || !url) {
       notFound()
     }
+
+    // Get headers for click tracking
+    const headersList = await headers()
+    const referrer = headersList.get('referer') || null
+    const userAgent = headersList.get('user-agent') || null
+    const ip = headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || null
+
+    // Record click in clicks table
+    await supabase
+      .from('clicks')
+      .insert([
+        {
+          short_code: shortCode,
+          referrer,
+          user_agent: userAgent,
+          ip
+        }
+      ])
+      .catch(err => console.error('Failed to record click:', err))
 
     // Increment click count
     await supabase
