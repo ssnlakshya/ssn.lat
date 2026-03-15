@@ -39,6 +39,7 @@ export function QrCodeGenerator({
   const [frameLabel, setFrameLabel] = useState("Scan Me");
   const [frameLabelColor, setFrameLabelColor] = useState("#FFFFFF");
   const [showCustomize, setShowCustomize] = useState(false);
+  const [addPadding, setAddPadding] = useState(false);
 
   const frameLabelSize = 24;
 
@@ -49,13 +50,16 @@ export function QrCodeGenerator({
     if (!svgElement) return;
 
     const qrSize = 180;
-    const padding = 16; // p-2 = 8px * 2
-    const frameExtraPadding = showFrame ? 24 : 0;
-    const frameLabelHeight = showFrame && frameLabel.trim() ? 36 : 0;
-
-    const canvasWidth = qrSize + padding + frameExtraPadding;
-    const canvasHeight =
-      qrSize + padding + frameExtraPadding + frameLabelHeight;
+    const padding = addPadding ? 16 : 0; // p-2 = 8px * 2
+    const framePadding = showFrame ? 12 : 0; // p-3 = 12px
+    const gap = 8; // gap-2 = 8px
+    const hasLabel = showFrame && frameLabel.trim().length > 0;
+    
+    const qrBoxSize = qrSize + padding;
+    const canvasWidth = qrBoxSize + (framePadding * 2);
+    const canvasHeight = showFrame
+        ? framePadding + qrBoxSize + (hasLabel ? gap + frameLabelSize : 0) + framePadding
+        : qrBoxSize;
 
     const canvas = document.createElement("canvas");
     const scale = 3; // High-res export
@@ -74,11 +78,11 @@ export function QrCodeGenerator({
     }
 
     // Draw QR background
-    const qrX = (canvasWidth - qrSize - padding) / 2;
-    const qrY = showFrame ? frameExtraPadding / 2 : 0;
+    const qrX = framePadding;
+    const qrY = framePadding;
     ctx.fillStyle = bgColor;
     ctx.beginPath();
-    ctx.roundRect(qrX, qrY, qrSize + padding, qrSize + padding, 8);
+    ctx.roundRect(qrX, qrY, qrBoxSize, qrBoxSize, 8);
     ctx.fill();
 
     // Draw QR code SVG
@@ -88,7 +92,7 @@ export function QrCodeGenerator({
       ctx.drawImage(img, qrX + padding / 2, qrY + padding / 2, qrSize, qrSize);
 
       // Draw frame label
-      if (showFrame && frameLabel.trim()) {
+      if (hasLabel) {
         ctx.fillStyle = frameLabelColor;
         ctx.font = `bold ${frameLabelSize}px sans-serif`;
         ctx.textAlign = "center";
@@ -96,7 +100,7 @@ export function QrCodeGenerator({
         ctx.fillText(
           frameLabel,
           canvasWidth / 2,
-          canvasHeight - frameLabelHeight / 2,
+          qrY + qrBoxSize + gap + (frameLabelSize / 2)
         );
       }
 
@@ -105,7 +109,7 @@ export function QrCodeGenerator({
     img.src =
       "data:image/svg+xml;base64," +
       btoa(unescape(encodeURIComponent(svgData)));
-  }, [bgColor, frameColor, frameLabel, frameLabelColor, showFrame]);
+  }, [bgColor, frameColor, frameLabel, frameLabelColor, showFrame, addPadding]);
 
   useEffect(() => {
     if (url && showQrCode) {
@@ -122,6 +126,7 @@ export function QrCodeGenerator({
     frameColor,
     frameLabel,
     frameLabelColor,
+    addPadding,
     generateQrCodeImage,
   ]);
 
@@ -237,22 +242,11 @@ export function QrCodeGenerator({
           <div
             ref={qrCodeRef}
             onClick={() => qrCodeDataUrl && copyQrCodeToClipboard()}
-            className={`relative flex flex-col items-center cursor-pointer [&:hover>.copy-overlay]:opacity-100 ${showFrame ? "rounded-xl" : "rounded-lg"}`}
-            style={
-              showFrame
-                ? {
-                  backgroundColor: frameColor,
-                  borderRadius: "12px",
-                  padding:
-                    "12px 12px " +
-                    (frameLabel.trim() ? "4px" : "12px") +
-                    " 12px",
-                }
-                : undefined
-            }
+            className={`relative flex flex-col items-center cursor-pointer transition-all [&:hover>.copy-overlay]:opacity-100 ${showFrame ? "p-3 rounded-xl gap-2" : "rounded-lg"}`}
+            style={showFrame ? { backgroundColor: frameColor } : undefined}
           >
             <div
-              className="relative p-2 rounded-lg"
+              className={`relative ${addPadding ? "p-2" : "p-0"} rounded-lg`}
               style={{ backgroundColor: bgColor }}
             >
               <QRCode
@@ -265,10 +259,11 @@ export function QrCodeGenerator({
             {/* Frame label */}
             {showFrame && frameLabel.trim() && (
               <p
-                className="font-bold mt-1 mb-1 text-center select-none"
+                className="font-bold text-center select-none"
                 style={{
                   color: frameLabelColor,
                   fontSize: `${frameLabelSize}px`,
+                  lineHeight: `${frameLabelSize}px`,
                 }}
               >
                 {frameLabel}
@@ -318,25 +313,45 @@ export function QrCodeGenerator({
                 </div>
               </div>
 
-              {/* ── Frame ── */}
+              {/* ── Options ── */}
               <div className="flex flex-col gap-2">
-                <div className="flex items-center justify-between">
-                  <input
-                    type="checkbox"
-                    id="show-frame"
-                    checked={showFrame}
-                    onChange={(e) => setShowFrame(e.target.checked)}
-                    className="w-4 h-4 shrink-0 rounded cursor-pointer accent-orange-500"
-                  />
-                  <label
-                    htmlFor="show-frame"
-                    className="text-xs text-orange-600 dark:text-orange-400 font-semibold uppercase tracking-wider cursor-pointer select-none"
-                  >
-                    Frame
-                  </label>
+                <p className="text-xs text-orange-600 dark:text-orange-400 font-semibold uppercase tracking-wider">
+                  Options
+                </p>
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center justify-between">
+                    <label
+                      htmlFor="add-padding"
+                      className="text-xs text-slate-11 font-medium text-left cursor-pointer select-none"
+                    >
+                      Add Padding
+                    </label>
+                    <input
+                      type="checkbox"
+                      id="add-padding"
+                      checked={addPadding}
+                      onChange={(e) => setAddPadding(e.target.checked)}
+                      className="w-4 h-4 shrink-0 rounded cursor-pointer accent-orange-500 bg-gray-11/5 border border-gray-11/20"
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <label
+                      htmlFor="show-frame"
+                      className="text-xs text-slate-11 font-medium text-left cursor-pointer select-none"
+                    >
+                      Enable Frame
+                    </label>
+                    <input
+                      type="checkbox"
+                      id="show-frame"
+                      checked={showFrame}
+                      onChange={(e) => setShowFrame(e.target.checked)}
+                      className="w-4 h-4 shrink-0 rounded cursor-pointer accent-orange-500 bg-gray-11/5 border border-gray-11/20"
+                    />
+                  </div>
                 </div>
                 {showFrame && (
-                  <div className="flex flex-col gap-3 border-l-2 border-orange-300 dark:border-orange-700 pl-4 animate-in fade-in-50 duration-200">
+                  <div className="flex flex-col gap-3 border-l-2 border-orange-300 dark:border-orange-700 pl-4 pt-1 animate-in fade-in-50 duration-200">
                     {/* Frame Color */}
                     <ColorInputRow
                       label="Frame Color"
